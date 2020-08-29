@@ -1,6 +1,6 @@
 # go-util
 
-### 自己整理的一些常用工具类合集
+### 项目 common 库
 
 ### Install
 ```bash
