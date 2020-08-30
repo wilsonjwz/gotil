@@ -66,15 +66,17 @@ go get github.com/iGoogle-ink/gotil
 ├── string.go
 ├── verify.go
 ├── web
-│   ├── http.go
-│   ├── http_test.go
-│   ├── json.go
+│   ├── gin.go
+│   ├── gin_test.go
 │   ├── page.go
+│   ├── rsp.go
 │   └── verify.go
 ├── ws
 │   └── websocket_connection.go
 ├── xhttp
-│   └── client.go
+│   ├── client.go
+│   ├── client_test.go
+│   └── model.go
 ├── xlog
 │   ├── debug_logger.go
 │   ├── error_logger.go
@@ -89,4 +91,5 @@ go get github.com/iGoogle-ink/gotil
 └── xtime
     ├── parse_format.go
     └── xtime.go
+
 ```
