@@ -2,7 +2,9 @@ package xlog
 
 import (
 	"sync"
+	"time"
 
+	"github.com/iGoogle-ink/gotil"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -90,13 +92,29 @@ func (l *Logger) Errorf(format string, args ...interface{}) {
 func (l *Logger) initZap() {
 	var err error
 	l.c = zap.NewProductionConfig()
-	l.c.OutputPaths = []string{"stdout"}
-	l.c.ErrorOutputPaths = []string{"stderr"}
-	l.c.EncoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+	l.c.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
+	l.c.EncoderConfig.EncodeTime = timeEncoder
 	l.Logger, err = l.c.Build()
 	if err != nil {
 		Errorf("l.initZap(),err:%+v", err)
 		return
 	}
 	l.Sugar = l.Logger.Sugar()
+}
+
+func timeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
+	encodeTimeLayout(t, gotil.TimeLayout_1, enc)
+}
+
+func encodeTimeLayout(t time.Time, layout string, enc zapcore.PrimitiveArrayEncoder) {
+	type appendTimeEncoder interface {
+		AppendTimeLayout(time.Time, string)
+	}
+
+	if enc, ok := enc.(appendTimeEncoder); ok {
+		enc.AppendTimeLayout(t, layout)
+		return
+	}
+
+	enc.AppendString(t.Format(layout))
 }
