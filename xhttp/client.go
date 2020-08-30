@@ -103,7 +103,7 @@ type Client struct {
 	method string
 
 	// requestType
-	requestType string
+	requestType RequestType
 
 	FormString string
 
@@ -135,7 +135,7 @@ func NewClient() (client *Client) {
 		Transport:     &http.Transport{},
 		Header:        make(http.Header),
 		requestType:   TypeUrlencoded,
-		unmarshalType: TypeJSON,
+		unmarshalType: string(TypeJSON),
 		Errors:        make([]error, 0),
 	}
 	return client
@@ -170,13 +170,13 @@ func (c *Client) Post(url string) (client *Client) {
 	return c
 }
 
-func (c *Client) Type(typeStr string) (client *Client) {
+func (c *Client) Type(typeStr RequestType) (client *Client) {
 	if _, ok := types[typeStr]; ok {
 		c.mu.Lock()
 		c.requestType = typeStr
 		c.mu.Unlock()
 	} else {
-		c.Errors = append(c.Errors, errors.New("Type func: incorrect type \""+typeStr+"\""))
+		c.Errors = append(c.Errors, errors.New("Type func: incorrect type \""+string(typeStr)+"\""))
 	}
 	return c
 }
@@ -222,14 +222,14 @@ func (c *Client) EndStruct(v interface{}) (res *http.Response, errs []error) {
 	defer c.mu.RUnlock()
 
 	switch c.unmarshalType {
-	case TypeJSON:
+	case string(TypeJSON):
 		err := json.Unmarshal(bs, &v)
 		if err != nil {
 			c.Errors = append(c.Errors, fmt.Errorf("json.Unmarshal(%s)：%w", string(bs), err))
 			return nil, c.Errors
 		}
 		return res, nil
-	case TypeXML:
+	case string(TypeXML):
 		err := xml.Unmarshal(bs, &v)
 		if err != nil {
 			c.Errors = append(c.Errors, fmt.Errorf("xml.Unmarshal(%s)：%w", string(bs), err))
@@ -268,7 +268,7 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 			case TypeXML:
 				reader = strings.NewReader(c.FormString)
 				c.ContentType = types[TypeXML]
-				c.unmarshalType = TypeXML
+				c.unmarshalType = string(TypeXML)
 			default:
 				return nil, errors.New("Request type Error ")
 			}

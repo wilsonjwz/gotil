@@ -1,16 +1,18 @@
 package xhttp
 
+type RequestType string
+
 const (
-	POST           = "POST"
-	GET            = "GET"
-	TypeJSON       = "json"
-	TypeXML        = "xml"
-	TypeUrlencoded = "urlencoded"
-	TypeForm       = "form"
-	TypeFormData   = "form-data"
+	POST                       = "POST"
+	GET                        = "GET"
+	TypeJSON       RequestType = "json"
+	TypeXML        RequestType = "xml"
+	TypeUrlencoded RequestType = "urlencoded"
+	TypeForm       RequestType = "form"
+	TypeFormData   RequestType = "form-data"
 )
 
-var types = map[string]string{
+var types = map[RequestType]string{
 	TypeJSON:       "application/json",
 	TypeXML:        "application/xml",
 	TypeForm:       "application/x-www-form-urlencoded",
