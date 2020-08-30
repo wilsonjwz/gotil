@@ -1,20 +1,24 @@
-package limit
+package web
 
 import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/iGoogle-ink/gotil/web"
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func TestInitServer(t *testing.T) {
-	// 解开注释测试
+	// 需要测试请自行解开注释测试
 
-	//c := &web.Config{
-	//	Port:  ":2233",
-	//	Limit: nil,
+	//c := &Config{
+	//	Port: ":2233",
+	//	Limit: &limit.Config{
+	//		Rate:       0, // 0 速率不限流
+	//		BucketSize: 100,
+	//	},
 	//}
-	//g := web.InitServer(c)
+	//
+	//g := InitServer(c)
 	//initRoute(g.Gin)
 	//g.Start()
 	//
@@ -35,16 +39,22 @@ func TestInitServer(t *testing.T) {
 }
 
 func initRoute(g *gin.Engine) {
-	g.GET("/a", func(c *gin.Context) {
-		web.JSON(c, "a", nil)
+	g.GET("/a/:abc", func(c *gin.Context) {
+		xlog.Debug(c.Param("abc"))
+		xlog.Debug(c.Request.RequestURI)
+		rsp := &struct {
+			Param string `json:"param"`
+			Path  string `json:"path"`
+		}{Param: c.Param("abc"), Path: c.Request.RequestURI}
+		JSON(c, rsp, nil)
 	})
 	g.GET("/b", func(c *gin.Context) {
-		web.JSON(c, "b", nil)
+		JSON(c, "b", nil)
 	})
 	g.GET("/c", func(c *gin.Context) {
-		web.JSON(c, "c", nil)
+		JSON(c, "c", nil)
 	})
 	g.GET("/d", func(c *gin.Context) {
-		web.JSON(c, "d", nil)
+		JSON(c, "d", nil)
 	})
 }

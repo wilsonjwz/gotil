@@ -12,18 +12,18 @@ func TestNewCache(t *testing.T) {
 	cache.Put("1", "one")
 	xlog.Info(cache.Get("1"))
 
-	xlog.Warning("===============")
+	xlog.Warn("===============")
 	cache.Put("2", "two")
 	xlog.Info(cache.Get("1"))
 
-	xlog.Warning("===============")
+	xlog.Warn("===============")
 	cache.Put("3", "three")
 	xlog.Info(cache.Get("2"))
 	xlog.Info(cache.Get("3"))
 	xlog.Info(cache.Get("3"))
 	xlog.Info(cache.Get("1"))
 
-	xlog.Warning("===============")
+	xlog.Warn("===============")
 	cache.Put("2", "two")
 	xlog.Info(cache.Get("3"))
 	xlog.Info(cache.Get("1"))

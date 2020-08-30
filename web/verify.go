@@ -18,6 +18,7 @@ const (
 )
 
 // VerifySign 验证Sign，签名规则，base64(md5(appid+path+ts))
+// todo: 当前支持60s验证，后续改成单次验证后即失效
 func VerifySign(c *gin.Context) {
 	ts := c.GetHeader(ts)
 	tsTime := time.Unix(gotil.String2Int64(ts), 0)

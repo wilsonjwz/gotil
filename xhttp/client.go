@@ -16,40 +16,110 @@ import (
 	"github.com/iGoogle-ink/gotil"
 )
 
-const (
-	POST           = "POST"
-	GET            = "GET"
-	TypeJSON       = "json"
-	TypeXML        = "xml"
-	TypeUrlencoded = "urlencoded"
-	TypeForm       = "form"
-	TypeFormData   = "form-data"
-)
-
-var Types = map[string]string{
-	TypeJSON:       "application/json",
-	TypeXML:        "application/xml",
-	TypeForm:       "application/x-www-form-urlencoded",
-	TypeFormData:   "application/x-www-form-urlencoded",
-	TypeUrlencoded: "application/x-www-form-urlencoded",
-}
-
 type Client struct {
-	HttpClient    *http.Client
-	Transport     *http.Transport
-	Header        http.Header
-	Timeout       time.Duration
-	Url           string
-	Host          string
-	Method        string
-	RequestType   string
-	FormString    string
-	ContentType   string
-	UnmarshalType string
-	Types         map[string]string
-	JsonByte      []byte
-	Errors        []error
-	mu            sync.RWMutex
+	// A Client is an HTTP client.
+	HttpClient *http.Client
+
+	// Transport specifies the mechanism by which individual
+	// HTTP requests are made.
+	// If nil, DefaultTransport is used.
+	Transport *http.Transport
+
+	// Header contains the request header fields either received
+	// by the server or to be sent by the client.
+	//
+	// If a server received a request with header lines,
+	//
+	//	Host: example.com
+	//	accept-encoding: gzip, deflate
+	//	Accept-Language: en-us
+	//	fOO: Bar
+	//	foo: two
+	//
+	// then
+	//
+	//	Header = map[string][]string{
+	//		"Accept-Encoding": {"gzip, deflate"},
+	//		"Accept-Language": {"en-us"},
+	//		"Foo": {"Bar", "two"},
+	//	}
+	//
+	// For incoming requests, the Host header is promoted to the
+	// Request.Host field and removed from the Header map.
+	//
+	// HTTP defines that header names are case-insensitive. The
+	// request parser implements this by using CanonicalHeaderKey,
+	// making the first character and any characters following a
+	// hyphen uppercase and the rest lowercase.
+	//
+	// For client requests, certain headers such as Content-Length
+	// and Connection are automatically written when needed and
+	// values in Header may be ignored. See the documentation
+	// for the Request.Write method.
+	Header http.Header
+
+	// Timeout specifies a time limit for requests made by this
+	// Client. The timeout includes connection time, any
+	// redirects, and reading the response body. The timer remains
+	// running after Get, Head, Post, or Do return and will
+	// interrupt reading of the Response.Body.
+	//
+	// A Timeout of zero means no timeout.
+	//
+	// The Client cancels requests to the underlying Transport
+	// as if the Request's Context ended.
+	//
+	// For compatibility, the Client will also use the deprecated
+	// CancelRequest method on Transport if found. New
+	// RoundTripper implementations should use the Request's Context
+	// for cancellation instead of implementing CancelRequest.
+	Timeout time.Duration
+
+	// request URL
+	url string
+
+	// For server requests, Host specifies the host on which the
+	// URL is sought. For HTTP/1 (per RFC 7230, section 5.4), this
+	// is either the value of the "Host" header or the host name
+	// given in the URL itself. For HTTP/2, it is the value of the
+	// ":authority" pseudo-header field.
+	// It may be of the form "host:port". For international domain
+	// names, Host may be in Punycode or Unicode form. Use
+	// golang.org/x/net/idna to convert it to either format if
+	// needed.
+	// To prevent DNS rebinding attacks, server Handlers should
+	// validate that the Host header has a value for which the
+	// Handler considers itself authoritative. The included
+	// ServeMux supports patterns registered to particular host
+	// names and thus protects its registered Handlers.
+	//
+	// For client requests, Host optionally overrides the Host
+	// header to send. If empty, the Request.Write method uses
+	// the value of URL.Host. Host may contain an international
+	// domain name.
+	Host string
+
+	// method request method, now only support GET and POST
+	method string
+
+	// requestType
+	requestType string
+
+	FormString string
+
+	// ContentType, now only support json, form, form-data, urlencoded, xml
+	ContentType string
+
+	// unmarshalType json or xml
+	unmarshalType string
+
+	types map[string]string
+
+	jsonByte []byte
+
+	Errors []error
+
+	mu sync.RWMutex
 }
 
 // NewClient , default tls.Config{InsecureSkipVerify: true}
@@ -64,8 +134,8 @@ func NewClient() (client *Client) {
 		},
 		Transport:     &http.Transport{},
 		Header:        make(http.Header),
-		RequestType:   TypeUrlencoded,
-		UnmarshalType: TypeJSON,
+		requestType:   TypeUrlencoded,
+		unmarshalType: TypeJSON,
 		Errors:        make([]error, 0),
 	}
 	return client
@@ -94,16 +164,16 @@ func (c *Client) SetHost(host string) (client *Client) {
 
 func (c *Client) Post(url string) (client *Client) {
 	c.mu.Lock()
-	c.Method = POST
-	c.Url = url
+	c.method = POST
+	c.url = url
 	c.mu.Unlock()
 	return c
 }
 
 func (c *Client) Type(typeStr string) (client *Client) {
-	if _, ok := Types[typeStr]; ok {
+	if _, ok := types[typeStr]; ok {
 		c.mu.Lock()
-		c.RequestType = typeStr
+		c.requestType = typeStr
 		c.mu.Unlock()
 	} else {
 		c.Errors = append(c.Errors, errors.New("Type func: incorrect type \""+typeStr+"\""))
@@ -113,8 +183,8 @@ func (c *Client) Type(typeStr string) (client *Client) {
 
 func (c *Client) Get(url string) (client *Client) {
 	c.mu.Lock()
-	c.Method = GET
-	c.Url = url
+	c.method = GET
+	c.url = url
 	c.mu.Unlock()
 	return c
 }
@@ -126,7 +196,7 @@ func (c *Client) SendStruct(v interface{}) (client *Client) {
 		return c
 	}
 	c.mu.Lock()
-	c.JsonByte = bs
+	c.jsonByte = bs
 	c.mu.Unlock()
 	return c
 }
@@ -144,10 +214,14 @@ func (c *Client) EndStruct(v interface{}) (res *http.Response, errs []error) {
 		c.Errors = append(c.Errors, errs...)
 		return nil, c.Errors
 	}
+	if res.StatusCode != 200 {
+		c.Errors = append(c.Errors, errors.New(string(bs)))
+		return res, c.Errors
+	}
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 
-	switch c.UnmarshalType {
+	switch c.unmarshalType {
 	case TypeJSON:
 		err := json.Unmarshal(bs, &v)
 		if err != nil {
@@ -163,7 +237,7 @@ func (c *Client) EndStruct(v interface{}) (res *http.Response, errs []error) {
 		}
 		return res, nil
 	default:
-		c.Errors = append(c.Errors, errors.New("UnmarshalType Type Wrong"))
+		c.Errors = append(c.Errors, errors.New("unmarshalType Type Wrong"))
 		return nil, c.Errors
 	}
 }
@@ -178,23 +252,23 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 		c.mu.RLock()
 		defer c.mu.RUnlock()
 
-		switch c.Method {
+		switch c.method {
 		case GET:
 			//todo: nothing
 		case POST:
-			switch c.RequestType {
+			switch c.requestType {
 			case TypeJSON:
-				if c.JsonByte != nil {
-					reader = strings.NewReader(string(c.JsonByte))
+				if c.jsonByte != nil {
+					reader = strings.NewReader(string(c.jsonByte))
 				}
-				c.ContentType = Types[TypeJSON]
+				c.ContentType = types[TypeJSON]
 			case TypeForm, TypeFormData, TypeUrlencoded:
 				reader = strings.NewReader(c.FormString)
-				c.ContentType = Types[TypeForm]
+				c.ContentType = types[TypeForm]
 			case TypeXML:
 				reader = strings.NewReader(c.FormString)
-				c.ContentType = Types[TypeXML]
-				c.UnmarshalType = TypeXML
+				c.ContentType = types[TypeXML]
+				c.unmarshalType = TypeXML
 			default:
 				return nil, errors.New("Request type Error ")
 			}
@@ -202,7 +276,7 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 			return nil, errors.New("Only support Get and Post ")
 		}
 
-		req, err := http.NewRequest(c.Method, c.Url, reader)
+		req, err := http.NewRequest(c.method, c.url, reader)
 		if err != nil {
 			return nil, err
 		}
