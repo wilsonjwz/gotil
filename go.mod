@@ -7,7 +7,7 @@ require (
 	github.com/go-redis/redis/v8 v8.0.0-beta.7
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/gorilla/websocket v1.4.2
-	github.com/jinzhu/gorm v1.9.15
+	github.com/jinzhu/gorm v1.9.16
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/viper v1.7.1
 	go.uber.org/zap v1.15.0
