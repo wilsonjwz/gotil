@@ -24,5 +24,5 @@ func (i *WarnLogger) logOut(format *string, v ...interface{}) {
 }
 
 func (i *WarnLogger) init() {
-	i.logger = log.New(os.Stderr, "[WARN] >> ", log.Lmsgprefix|log.Lshortfile|log.Lmicroseconds|log.Ldate)
+	i.logger = log.New(os.Stderr, Yellow+"[WARN] >> "+Reset, log.Lmsgprefix|log.Lshortfile|log.Lmicroseconds|log.Ldate)
 }

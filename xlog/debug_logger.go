@@ -24,5 +24,5 @@ func (i *DebugLogger) logOut(format *string, v ...interface{}) {
 }
 
 func (i *DebugLogger) init() {
-	i.logger = log.New(os.Stdout, "[DEBUG] >> ", log.Lmsgprefix|log.Lshortfile|log.Lmicroseconds|log.Ldate)
+	i.logger = log.New(os.Stdout, Cyan+"[DEBUG] >> "+Reset, log.Lmsgprefix|log.Lshortfile|log.Lmicroseconds|log.Ldate)
 }

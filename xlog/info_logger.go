@@ -24,5 +24,5 @@ func (i *InfoLogger) logOut(format *string, v ...interface{}) {
 }
 
 func (i *InfoLogger) init() {
-	i.logger = log.New(os.Stdout, "[INFO] >> ", log.Lmsgprefix|log.Lshortfile|log.Lmicroseconds|log.Ldate)
+	i.logger = log.New(os.Stdout, White+"[INFO] >> "+Reset, log.Lmsgprefix|log.Lshortfile|log.Lmicroseconds|log.Ldate)
 }

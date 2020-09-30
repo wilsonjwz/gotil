@@ -26,7 +26,7 @@ func (e *ErrorLogger) logOut(format *string, v ...interface{}) {
 }
 
 func (e *ErrorLogger) init() {
-	e.logger = log.New(os.Stderr, "[ERROR] >> ", log.Lmsgprefix|log.Lshortfile|log.Lmicroseconds|log.Ldate)
+	e.logger = log.New(os.Stderr, Red+"[ERROR] >> "+Reset, log.Lmsgprefix|log.Lshortfile|log.Lmicroseconds|log.Ldate)
 }
 
 //func stack() (bs []byte) {
