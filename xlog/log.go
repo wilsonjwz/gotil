@@ -25,7 +25,7 @@ var (
 	BlueBright    = string([]byte{27, 91, 49, 59, 51, 52, 109})
 	MagentaBright = string([]byte{27, 91, 49, 59, 51, 53, 109})
 	CyanBright    = string([]byte{27, 91, 49, 59, 51, 54, 109})
-	// 英文斜体
+	// 斜体
 	WhiteBevel   = string([]byte{27, 91, 51, 59, 51, 48, 109})
 	RedBevel     = string([]byte{27, 91, 51, 59, 51, 49, 109})
 	GreenBevel   = string([]byte{27, 91, 51, 59, 51, 50, 109})
