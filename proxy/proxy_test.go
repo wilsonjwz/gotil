@@ -18,12 +18,9 @@ func TestService_Proxy(t *testing.T) {
 	//	Key:         "5urivxGzAqOzdJotjbK7AOmayYYnyHlP",
 	//}
 	//
-	//New(c)
+	//handler := NewHandler(c)
 	//
-	//http.Handle("/", &ProxyHandler{})
-	//
-	//xlog.Info("Proxy Started")
-	//if err := http.ListenAndServe(c.ServerPort, nil); err != nil {
+	//if err := handler.ListenAndServe(); err != nil {
 	//	log.Fatal("Proxy Start Err：", err)
 	//}
 }

@@ -24,7 +24,7 @@ type Service struct {
 	log     *log.Logger
 }
 
-func New(c *Config) {
+func NewHandler(c *Config) (handler *ProxyHandler) {
 	srv = &Service{
 		httpCli: new(http.Client),
 		Schema:  c.ProxySchema,
@@ -33,6 +33,7 @@ func New(c *Config) {
 		Key:     c.Key,
 		log:     log.New(os.Stdout, "[PROXY] ", log.Lmsgprefix),
 	}
+	return &ProxyHandler{c: c}
 }
 
 // Proxy

@@ -20,8 +20,8 @@ const (
 // 配置文件
 type Config struct {
 	ProxySchema SchemaType // SchemaHTTP or SchemaHTTPS
-	ProxyHost   string
-	ProxyPort   string
-	ServerPort  string
-	Key         string
+	ProxyHost   string     // 转发到的接口 Host
+	ProxyPort   string     // 转发到的接口 Port
+	ServerPort  string     // 代理转发服务启动的端口
+	Key         string     // 简单的校验Key
 }
