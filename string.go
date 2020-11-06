@@ -1,7 +1,6 @@
 package gotil
 
 import (
-	"bytes"
 	"strconv"
 	"strings"
 	"sync"
@@ -10,7 +9,7 @@ import (
 var (
 	bfPool = sync.Pool{
 		New: func() interface{} {
-			return bytes.NewBuffer([]byte{})
+			return &strings.Builder{}
 		},
 	}
 )
@@ -23,15 +22,15 @@ func JoinInts(is []int64) string {
 	if len(is) == 1 {
 		return strconv.FormatInt(is[0], 10)
 	}
-	buf := bfPool.Get().(*bytes.Buffer)
+	buf := bfPool.Get().(*strings.Builder)
 	for _, i := range is {
 		buf.WriteString(strconv.FormatInt(i, 10))
 		buf.WriteByte(',')
 	}
-	if buf.Len() > 0 {
-		buf.Truncate(buf.Len() - 1)
-	}
 	s := buf.String()
+	if len(s) > 0 {
+		s = s[:len(s)-1]
+	}
 	buf.Reset()
 	bfPool.Put(buf)
 	return s

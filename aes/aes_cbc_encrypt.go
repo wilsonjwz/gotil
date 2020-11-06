@@ -7,18 +7,18 @@ import (
 )
 
 // 加密后转成Base64字符串
-func AesCBCEncryptToString(jsonData []byte, secretKey string) (string, error) {
+func AesCBCEncryptToString(originData []byte, secretKey string) (string, error) {
 	key := []byte(secretKey)
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return "", err
 	}
 	blockSize := block.BlockSize()
-	jsonData = PKCS5Padding(jsonData, blockSize)
+	originData = PKCS5Padding(originData, blockSize)
 
 	blockMode := cipher.NewCBCEncrypter(block, key[:blockSize])
-	crypted := make([]byte, len(jsonData))
-	blockMode.CryptBlocks(crypted, jsonData)
+	crypted := make([]byte, len(originData))
+	blockMode.CryptBlocks(crypted, originData)
 	secretData := base64.StdEncoding.EncodeToString(crypted)
 	return secretData, nil
 }

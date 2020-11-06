@@ -6,14 +6,14 @@ import (
 	"strings"
 )
 
-//字符串转Int
+// 字符串转Int
 //    intStr：数字的字符串
 func String2Int(intStr string) (intNum int) {
 	intNum, _ = strconv.Atoi(intStr)
 	return
 }
 
-//字符串转Int64
+// 字符串转Int64
 //    intStr：数字的字符串
 func String2Int64(intStr string) (int64Num int64) {
 	intNum, _ := strconv.Atoi(intStr)
@@ -21,14 +21,14 @@ func String2Int64(intStr string) (int64Num int64) {
 	return
 }
 
-//字符串转Float64
+// 字符串转Float64
 //    floatStr：小数点数字的字符串
 func String2Float64(floatStr string) (floatNum float64) {
 	floatNum, _ = strconv.ParseFloat(floatStr, 64)
 	return
 }
 
-//字符串转Float32
+// 字符串转Float32
 //    floatStr：小数点数字的字符串
 func String2Float32(floatStr string) (floatNum float32) {
 	floatNum64, _ := strconv.ParseFloat(floatStr, 32)
@@ -36,14 +36,14 @@ func String2Float32(floatStr string) (floatNum float32) {
 	return
 }
 
-//Int转字符串
+// Int转字符串
 //    intNum：数字字符串
 func Int2String(intNum int) (intStr string) {
 	intStr = strconv.Itoa(intNum)
 	return
 }
 
-//Int64转字符串
+// Int64转字符串
 //    intNum：数字字符串
 func Int642String(intNum int64) (int64Str string) {
 	//10, 代表10进制
@@ -51,7 +51,7 @@ func Int642String(intNum int64) (int64Str string) {
 	return
 }
 
-//Float64转字符串
+// Float64转字符串
 //    floatNum：float64数字
 //    prec：精度位数（不传则默认float数字精度）
 func Float64ToString(floatNum float64, prec ...int) (floatStr string) {
@@ -63,7 +63,7 @@ func Float64ToString(floatNum float64, prec ...int) (floatStr string) {
 	return
 }
 
-//Float32转字符串
+// Float32转字符串
 //    floatNum：float32数字
 //    prec：精度位数（不传则默认float数字精度）
 func Float32ToString(floatNum float32, prec ...int) (floatStr string) {
@@ -75,7 +75,7 @@ func Float32ToString(floatNum float32, prec ...int) (floatStr string) {
 	return
 }
 
-//二进制转10进制
+// 二进制转10进制
 func BinaryToDecimal(bit string) (num int) {
 	fields := strings.Split(bit, "")
 	lens := len(fields)

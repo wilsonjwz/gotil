@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	xrate "github.com/iGoogle-ink/gotil/rate"
+	"github.com/labstack/echo/v4"
 	"golang.org/x/time/rate"
 )
 
@@ -43,7 +44,7 @@ func NewLimiter(c *Config) (rl *RateLimiter) {
 	return rl
 }
 
-func (r *RateLimiter) Limit() gin.HandlerFunc {
+func (r *RateLimiter) GinLimit() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		path := strings.Split(c.Request.RequestURI, "?")[0]
 		// log.Warning("key:", path[1:])
@@ -60,6 +61,27 @@ func (r *RateLimiter) Limit() gin.HandlerFunc {
 			c.Abort()
 		}
 		c.Next()
+	}
+}
+
+func (r *RateLimiter) EchoLimit() echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			path := strings.Split(c.Request().RequestURI, "?")[0]
+			// log.Warning("key:", path[1:])
+			limiter := r.LimiterGroup.Get(path[1:]).(*rate.Limiter)
+			if allow := limiter.Allow(); !allow {
+				rsp := struct {
+					Code    int    `json:"code"`
+					Message string `json:"message"`
+				}{
+					Code:    10503,
+					Message: "服务器忙，请稍后重试...",
+				}
+				return c.JSON(http.StatusOK, rsp)
+			}
+			return next(c)
+		}
 	}
 }
 

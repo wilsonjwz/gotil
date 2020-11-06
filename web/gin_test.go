@@ -1,41 +1,49 @@
 package web
 
 import (
+	"os"
+	"os/signal"
+	"syscall"
 	"testing"
 
 	"github.com/gin-gonic/gin"
+	"github.com/iGoogle-ink/gotil/limit"
 	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func TestInitServer(t *testing.T) {
 	// 需要测试请自行解开注释测试
 
-	//c := &Config{
-	//	Port: ":2233",
-	//	Limit: &limit.Config{
-	//		Rate:       0, // 0 速率不限流
-	//		BucketSize: 100,
-	//	},
-	//}
-	//
-	//g := InitServer(c)
-	//initRoute(g.Gin)
-	//g.Start()
-	//
-	//ch := make(chan os.Signal)
-	//signal.Notify(ch, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)
-	//for {
-	//	si := <-ch
-	//	switch si {
-	//	case syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT:
-	//		xlog.Warnf("get a signal %s, stop the process", si.String())
-	//		// todo something
-	//		return
-	//	case syscall.SIGHUP:
-	//	default:
-	//		return
-	//	}
-	//}
+	c := &Config{
+		Port: ":2233",
+		Limit: &limit.Config{
+			Rate:       0, // 0 速率不限流
+			BucketSize: 100,
+		},
+	}
+
+	g := InitServer(c)
+	g.Gin.Use(g.CORS())
+	g.Gin.Use(g.Recovery())
+
+	initRoute(g.Gin)
+
+	g.Start()
+
+	ch := make(chan os.Signal)
+	signal.Notify(ch, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)
+	for {
+		si := <-ch
+		switch si {
+		case syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT:
+			xlog.Warnf("get a signal %s, stop the process", si.String())
+			// todo something
+			return
+		case syscall.SIGHUP:
+		default:
+			return
+		}
+	}
 }
 
 func initRoute(g *gin.Engine) {
