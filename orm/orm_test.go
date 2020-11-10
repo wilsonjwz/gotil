@@ -21,7 +21,7 @@ func (m *Student) TableName() string {
 
 func TestInitGorm(t *testing.T) {
 	// 初始化 Gorm
-	gc1 := &MySQLConfig{DSN: dsn, Active: 10, Idle: 10, ShowSQL: true}
+	gc1 := &MySQLConfig{DSN: dsn, Active: 10, Idle: 10, IdleTimeout: 10, ShowSQL: true}
 	g := InitGorm(gc1)
 
 	student := new(Student)
@@ -44,7 +44,7 @@ func TestInitGorm(t *testing.T) {
 
 func TestInitXorm(t *testing.T) {
 	// 初始化 Xorm
-	gc1 := &MySQLConfig{DSN: dsn, Active: 10, Idle: 10, ShowSQL: true}
+	gc1 := &MySQLConfig{DSN: dsn, Active: 10, Idle: 10, IdleTimeout: 10, ShowSQL: true}
 	x := InitXorm(gc1)
 
 	student := new(Student)
