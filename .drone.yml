@@ -16,7 +16,7 @@ steps:
     environment:
       MYSQL_ROOT_PASSWORD: "root"
       MYSQL_DATABASE: "school"
-    detach: false # 后台运行
+    detach: true # 后台运行
 
   - name: ci_1.13
     pull: if-not-exists
@@ -30,6 +30,7 @@ steps:
     depends_on:
       - mysql
     commands:
+      - sleep 15  # wait mysql server turn on
       - go version
       - go env
       - go mod tidy
@@ -47,6 +48,7 @@ steps:
     depends_on:
       - mysql
     commands:
+      - sleep 15  # wait mysql server turn on
       - go version
       - go env
       - go mod tidy
@@ -64,6 +66,7 @@ steps:
     depends_on:
       - mysql
     commands:
+      - sleep 15  # wait mysql server turn on
       - go version
       - go env
       - go mod tidy
