@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	dsn = "root:root@tcp(mysql)/school?parseTime=true&loc=Local&charset=utf8mb4"
+	dsn = "root:root@tcp(mysql:3306)/school?parseTime=true&loc=Local&charset=utf8mb4"
 )
 
 type Student struct {
@@ -24,22 +24,23 @@ func TestInitGorm(t *testing.T) {
 	gc1 := &MySQLConfig{DSN: dsn, Active: 10, Idle: 10, IdleTimeout: 10, ShowSQL: true}
 	g := InitGorm(gc1)
 
-	student := new(Student)
+	student := &Student{Name: "Jerry"}
 	g.AutoMigrate(student)
 
-	err := g.Create(&Student{Id: 1, Name: "Jerry"}).Error
+	err := g.Create(student).Error
 	if err != nil {
 		xlog.Error(err)
 		return
 	}
-
-	err = g.Model(student).Select([]string{"id", "name"}).Where("id = ?", 1).First(student).Error
+	var sts []*Student
+	err = g.Model(student).Select([]string{"id", "name"}).Where("id = ?", 1).Find(&sts).Error
 	if err != nil {
 		xlog.Error(err)
 		return
 	}
-
-	xlog.Debug("gorm:", student)
+	for _, v := range sts {
+		xlog.Debug("gorm:", v)
+	}
 }
 
 func TestInitXorm(t *testing.T) {
@@ -50,7 +51,7 @@ func TestInitXorm(t *testing.T) {
 	student := new(Student)
 	x.Sync2(student)
 
-	_, err := x.Insert(&Student{Id: 1, Name: "Jerry"})
+	_, err := x.Insert(&Student{Name: "Jerry"})
 	if err != nil {
 		xlog.Error(err)
 		return
