@@ -2,7 +2,7 @@
 
 ### 项目 common 库
 
-[![Golang](https://img.shields.io/badge/golang-1.14+-brightgreen.svg)](https://golang.google.cn)
+[![Golang](https://img.shields.io/badge/golang-1.13+-brightgreen.svg)](https://golang.google.cn)
 [![GoDoc](https://img.shields.io/badge/doc-go.dev-informational.svg)](https://pkg.go.dev/github.com/iGoogle-ink/gotil)
 [![Drone CI](https://cloud.drone.io/api/badges/iGoogle-ink/gotil/status.svg)](https://cloud.drone.io/iGoogle-ink/gotil)
 [![GitHub Release](https://img.shields.io/github/v/release/iGoogle-ink/gotil)](https://github.com/iGoogle-ink/gotil/releases)

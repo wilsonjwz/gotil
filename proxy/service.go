@@ -11,7 +11,8 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
+
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 type Service struct {
@@ -31,7 +32,7 @@ func NewHandler(c *Config) (handler *ProxyHandler) {
 		Host:    c.ProxyHost,
 		Port:    c.ProxyPort,
 		Key:     c.Key,
-		log:     log.New(os.Stdout, "[PROXY] ", log.Lmsgprefix),
+		log:     log.New(os.Stdout, xlog.Magenta+" [PROXY] "+xlog.Reset, log.Ldate|log.Lmicroseconds),
 	}
 	return &ProxyHandler{c: c}
 }
@@ -116,7 +117,7 @@ func (s *Service) Proxy(c context.Context, w http.ResponseWriter, r *http.Reques
 		return
 	}
 	defer resp.Body.Close()
-	s.log.Println(fmt.Sprintf("%v | %d | %s | %s      %s", time.Now().Format("2006/01/02 - 15:04:05"), resp.StatusCode, s.clientIP(), rMethod, r.RequestURI))
+	s.log.Println(fmt.Sprintf("| %d | %s | %s      %s", resp.StatusCode, s.clientIP(), rMethod, r.RequestURI))
 	rsp, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
