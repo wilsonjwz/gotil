@@ -14,8 +14,8 @@ steps:
     pull: if-not-exists
     image: mysql:5.7
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: school
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "school"
     detach: true # 后台运行
 
   - name: ci_1.13

@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	dsn = "root:root@tcp(mysql)/school?timeout=10s&readTimeout=10s&writeTimeout=10s&parseTime=true&loc=Local&charset=utf8mb4"
+	dsn = "root:root@tcp(mysql)/school?parseTime=true&loc=Local&charset=utf8mb4"
 )
 
 type Student struct {
