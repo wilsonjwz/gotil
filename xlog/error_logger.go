@@ -30,15 +30,11 @@ func (e *ErrorLogger) logOut(format *string, v ...interface{}) {
 }
 
 func (e *ErrorLogger) init() {
-	version := runtime.Version()
-	vv := strings.Split(version, ".")
-	fmt.Println("version:", vv)
-	fmt.Println("version:", vv[1])
-	if gotil.String2Int(vv[1]) >= 14 {
-		e.logger = log.New(os.Stdout, Red+" [ERROR] "+Reset, log.Lmsgprefix|log.Lshortfile|log.Ldate|log.Lmicroseconds)
+	if gotil.String2Int(strings.Split(runtime.Version(), ".")[1]) >= 14 {
+		e.logger = log.New(os.Stdout, Red+" [ERROR] >> "+Reset, 64|log.Lshortfile|log.Ldate|log.Lmicroseconds)
 		return
 	}
-	e.logger = log.New(os.Stdout, Red+" [ERROR] >> "+Reset, log.Lshortfile|log.Ldate|log.Lmicroseconds)
+	e.logger = log.New(os.Stdout, Red+" [ERROR] "+Reset, log.Lshortfile|log.Ldate|log.Lmicroseconds)
 }
 
 //func stack() (bs []byte) {
