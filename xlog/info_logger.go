@@ -29,6 +29,8 @@ func (i *InfoLogger) logOut(format *string, v ...interface{}) {
 
 func (i *InfoLogger) init() {
 	version := strings.Split(runtime.Version(), ".")
+	log.Println("version:", version)
+	log.Println("version:", version[1])
 	if gotil.String2Int(version[1]) >= 14 {
 		i.logger = log.New(os.Stdout, White+" [INFO] "+Reset, log.Lmsgprefix|log.Lshortfile|log.Ldate|log.Lmicroseconds)
 		return

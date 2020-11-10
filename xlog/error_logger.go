@@ -31,6 +31,8 @@ func (e *ErrorLogger) logOut(format *string, v ...interface{}) {
 
 func (e *ErrorLogger) init() {
 	version := strings.Split(runtime.Version(), ".")
+	log.Println("version:", version)
+	log.Println("version:", version[1])
 	if gotil.String2Int(version[1]) >= 14 {
 		e.logger = log.New(os.Stdout, Red+" [ERROR] "+Reset, log.Lmsgprefix|log.Lshortfile|log.Ldate|log.Lmicroseconds)
 		return
