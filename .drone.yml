@@ -27,7 +27,7 @@ steps:
       GOSUMDB: "off"
       CGO_ENABLED: "0"
       GOOS: "linux"
-    detach: true # 后台运行
+    #    detach: true # 后台运行
     commands:
       - go version
       - go env
@@ -43,7 +43,7 @@ steps:
       GOSUMDB: "off"
       CGO_ENABLED: "0"
       GOOS: "linux"
-    detach: true # 后台运行
+    #    detach: true # 后台运行
     commands:
       - go version
       - go env
@@ -59,7 +59,7 @@ steps:
       GOSUMDB: "off"
       CGO_ENABLED: "0"
       GOOS: "linux"
-    detach: true # 后台运行
+    #    detach: true # 后台运行
     commands:
       - go version
       - go env
