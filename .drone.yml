@@ -10,6 +10,14 @@ platform:
   arch: amd64
 
 steps:
+  - name: mysql
+    pull: if-not-exists
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "school"
+    detach: true
+
   - name: ci_1.13
     pull: if-not-exists
     image: golang:1.13
@@ -24,6 +32,8 @@ steps:
       - go env
       - go mod tidy
       - go test ./...
+    depends_on:
+      - mysql
 
   - name: ci_1.14
     pull: if-not-exists
@@ -39,6 +49,8 @@ steps:
       - go env
       - go mod tidy
       - go test ./...
+    depends_on:
+      - mysql
 
   - name: ci_1.15
     pull: if-not-exists
@@ -54,6 +66,8 @@ steps:
       - go env
       - go mod tidy
       - go test ./...
+    depends_on:
+      - mysql
 
 trigger:
   branch:

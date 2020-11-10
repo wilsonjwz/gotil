@@ -6,32 +6,59 @@ import (
 	"github.com/iGoogle-ink/gotil/xlog"
 )
 
+var (
+	dsn = "root:root@tcp(mysql)/school?timeout=10s&readTimeout=10s&writeTimeout=10s&parseTime=true&loc=Local&charset=utf8mb4"
+)
+
+type Student struct {
+	Id   int    `gorm:"column:id;primary_key" xorm:"'id' pk"`
+	Name string `gorm:"column:name" xorm:"'name'"`
+}
+
+func (m *Student) TableName() string {
+	return "student"
+}
+
 func TestInitGorm(t *testing.T) {
 	// 初始化 Gorm
-	gc1 := &MySQLConfig{DSN: "dsn", Active: 100, Idle: 50, ShowSQL: true}
+	gc1 := &MySQLConfig{DSN: dsn, Active: 10, Idle: 10, ShowSQL: true}
 	g := InitGorm(gc1)
-	var student = &struct {
-		Id   int    `gorm:"column:id;primary_key"`
-		Name string `gorm:"column:name"`
-	}{}
-	err := g.Table("student").Select([]string{"id", "name"}).Where("id = ?", 1).First(student).Error
+
+	student := new(Student)
+	g.AutoMigrate(student)
+
+	err := g.Create(&Student{Id: 1, Name: "Jerry"}).Error
 	if err != nil {
 		xlog.Error(err)
 		return
 	}
+
+	err = g.Model(student).Select([]string{"id", "name"}).Where("id = ?", 1).First(student).Error
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+
+	xlog.Debug("gorm:", student)
 }
 
 func TestInitXorm(t *testing.T) {
 	// 初始化 Xorm
-	gc1 := &MySQLConfig{DSN: "dsn", Active: 100, Idle: 50, ShowSQL: true}
+	gc1 := &MySQLConfig{DSN: dsn, Active: 10, Idle: 10, ShowSQL: true}
 	x := InitXorm(gc1)
-	var student = &struct {
-		Id   int    `xorm:"'id'"`
-		Name string `xorm:"'name'"`
-	}{}
-	_, err := x.Table("student").Select("id,name").Where("id = ?", 1).Get(student)
+
+	student := new(Student)
+	x.Sync2(student)
+
+	_, err := x.Insert(&Student{Id: 1, Name: "Jerry"})
 	if err != nil {
 		xlog.Error(err)
 		return
 	}
+	_, err = x.Table(student.TableName()).Select("id,name").Where("id = ?", 1).Get(student)
+	if err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debug("xorm:", student)
 }
