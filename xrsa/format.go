@@ -3,8 +3,8 @@ package xrsa
 import "strings"
 
 const (
-	PKCS1 PKCSType = 1
-	PKCS8 PKCSType = 2
+	PKCS1 PKCSType = 1 // 非java适用
+	PKCS8 PKCSType = 2 // java适用
 )
 
 type PKCSType uint8
