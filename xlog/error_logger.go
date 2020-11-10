@@ -4,7 +4,11 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"runtime"
+	"strings"
 	"sync"
+
+	"github.com/iGoogle-ink/gotil"
 )
 
 type ErrorLogger struct {
@@ -26,7 +30,12 @@ func (e *ErrorLogger) logOut(format *string, v ...interface{}) {
 }
 
 func (e *ErrorLogger) init() {
-	e.logger = log.New(os.Stderr, Red+"[ERROR] >> "+Reset, log.Lmsgprefix|log.Lshortfile|log.Lmicroseconds|log.Ldate)
+	version := strings.Split(runtime.Version(), ".")
+	if gotil.String2Int(version[1]) >= 14 {
+		e.logger = log.New(os.Stdout, Red+" [ERROR] "+Reset, log.Lmsgprefix|log.Lshortfile|log.Ldate|log.Lmicroseconds)
+		return
+	}
+	e.logger = log.New(os.Stdout, Red+" [ERROR] >> "+Reset, log.Lshortfile|log.Ldate|log.Lmicroseconds)
 }
 
 //func stack() (bs []byte) {

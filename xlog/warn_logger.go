@@ -4,7 +4,11 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"runtime"
+	"strings"
 	"sync"
+
+	"github.com/iGoogle-ink/gotil"
 )
 
 type WarnLogger struct {
@@ -24,5 +28,10 @@ func (i *WarnLogger) logOut(format *string, v ...interface{}) {
 }
 
 func (i *WarnLogger) init() {
-	i.logger = log.New(os.Stderr, Yellow+"[WARN] >> "+Reset, log.Lmsgprefix|log.Lshortfile|log.Lmicroseconds|log.Ldate)
+	version := strings.Split(runtime.Version(), ".")
+	if gotil.String2Int(version[1]) >= 14 {
+		i.logger = log.New(os.Stdout, Yellow+" [WARN] "+Reset, log.Lmsgprefix|log.Lshortfile|log.Ldate|log.Lmicroseconds)
+		return
+	}
+	i.logger = log.New(os.Stdout, Yellow+" [WARN] >> "+Reset, log.Lshortfile|log.Ldate|log.Lmicroseconds)
 }
