@@ -10,13 +10,13 @@ platform:
   arch: amd64
 
 steps:
-  #  - name: mysql
-  #    pull: if-not-exists
-  #    image: mysql:5.7
-  #    environment:
-  #      MYSQL_ROOT_PASSWORD: "root"
-  #      MYSQL_DATABASE: "school"
-  #    detach: true # 后台运行
+  - name: mysql
+    pull: if-not-exists
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "school"
+    detach: true # 后台运行
 
   - name: ci_1.13
     pull: if-not-exists
@@ -27,7 +27,8 @@ steps:
       GOSUMDB: "off"
       CGO_ENABLED: "0"
       GOOS: "linux"
-    #    detach: true # 后台运行
+    depends_on:
+      - mysql
     commands:
       - go version
       - go env
@@ -43,7 +44,8 @@ steps:
       GOSUMDB: "off"
       CGO_ENABLED: "0"
       GOOS: "linux"
-    #    detach: true # 后台运行
+    depends_on:
+      - mysql
     commands:
       - go version
       - go env
@@ -59,7 +61,8 @@ steps:
       GOSUMDB: "off"
       CGO_ENABLED: "0"
       GOOS: "linux"
-    #    detach: true # 后台运行
+    depends_on:
+      - mysql
     commands:
       - go version
       - go env
