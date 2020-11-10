@@ -12,17 +12,18 @@ import (
 )
 
 // Deprecated
+// 推荐使用：RsaDecryptDataV2()
 // RSA解密数据
-// cipherData：加密字符串
-// privateKeyFilePath：私钥证书文件路径
+// 	cipherData：加密字符串
+// 	privateKeyFilePath：私钥证书文件路径
 func RsaDecryptData(cipherData string, privateKeyFilePath string) (originData string, err error) {
 	fileBytes, err := ioutil.ReadFile(privateKeyFilePath)
 	if err != nil {
-		return "", fmt.Errorf("私钥文件读取失败: %w", err)
+		return "", fmt.Errorf("privateKeyFile read fail: %w", err)
 	}
 	block, _ := pem.Decode(fileBytes)
 	if block == nil {
-		return "", errors.New("私钥Decode错误")
+		return "", errors.New("privateKey decode error")
 	}
 	privateKey, err := x509.ParsePKCS1PrivateKey(block.Bytes)
 	if err != nil {
