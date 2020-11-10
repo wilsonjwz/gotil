@@ -45,11 +45,6 @@ func RsaDecryptData(t PKCSType, cipherData []byte, privateKey string) (originDat
 		}
 	}
 
-	//rpk, err := x509.ParsePKCS1PrivateKey(block.Bytes)
-	//if err != nil {
-	//	return nil, fmt.Errorf("x509.ParsePKCS1PrivateKey：%w", err)
-	//}
-
 	originBytes, err := rsa.DecryptPKCS1v15(rand.Reader, key, cipherData)
 	if err != nil {
 		return nil, fmt.Errorf("xrsa.DecryptPKCS1v15：%w", err)
@@ -90,10 +85,6 @@ func RsaDecryptOAEPData(h hash.Hash, t PKCSType, privateKey string, ciphertext, 
 		}
 	}
 
-	//rpk, err := x509.ParsePKCS1PrivateKey(block.Bytes)
-	//if err != nil {
-	//	return nil, fmt.Errorf("x509.ParsePKCS1PrivateKey：%w", err)
-	//}
 	originBytes, err := rsa.DecryptOAEP(h, rand.Reader, key, ciphertext, label)
 	if err != nil {
 		return nil, err

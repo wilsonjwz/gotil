@@ -111,15 +111,6 @@ func RsaEncryptOAEPData(h hash.Hash, t PKCSType, publicKey string, originData, l
 		key = pk1
 	}
 
-	//pubKey, err := x509.ParsePKIXPublicKey(block.Bytes)
-	//if err != nil {
-	//	return nil, fmt.Errorf("x509.ParsePKIXPublicKey：%w", err)
-	//}
-	//pk, ok := pubKey.(*rsa.PublicKey)
-	//if !ok {
-	//	return nil, errors.New("publicKey parse error")
-	//}
-
 	cipherBytes, err := rsa.EncryptOAEP(h, rand.Reader, key, originData, label)
 	if err != nil {
 		return nil, err
