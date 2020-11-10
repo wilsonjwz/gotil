@@ -12,11 +12,11 @@ platform:
 steps:
   - name: mysql
     pull: if-not-exists
-    image: mysql:8.0
+    image: mysql
     environment:
       MYSQL_ROOT_PASSWORD: "root"
       MYSQL_DATABASE: "school"
-    detach: true
+    detach: true # 后台运行
 
   - name: ci_1.13
     pull: if-not-exists
