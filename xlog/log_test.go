@@ -8,7 +8,7 @@ import (
 )
 
 func TestLog(t *testing.T) {
-	eg := new(errgroup.Group)
+	var eg errgroup.Group
 
 	// default log
 	eg.Go(func(ctx context.Context) error {
