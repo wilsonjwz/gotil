@@ -56,12 +56,12 @@ iRp6Zaz/mXn3pegEJN+jz2JCquuFs9fakucLTOXqIuLK+rshi3Q=
 func TestRsaEncryptAndDecryptData(t *testing.T) {
 	originData := "www.gopay.ink"
 	xlog.Debug("数据：", originData)
-	encryptData, err := RsaEncryptData(PKCS8, []byte(originData), FormatAlipayPublicKey(aliPubKeyPKCS8))
+	encryptData, err := RsaEncryptDataV2(PKCS8, []byte(originData), FormatAlipayPublicKey(aliPubKeyPKCS8))
 	if err != nil {
 		xlog.Error("RsaEncryptData:", err)
 		return
 	}
-	origin, err := RsaDecryptData(PKCS8, encryptData, FormatAlipayPrivateKey(aliPriKeyPKCS8))
+	origin, err := RsaDecryptDataV2(PKCS8, encryptData, FormatAlipayPrivateKey(aliPriKeyPKCS8))
 	if err != nil {
 		xlog.Error("RsaDecryptData:", err)
 		return
