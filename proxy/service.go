@@ -32,7 +32,7 @@ func NewHandler(c *Config) (handler *ProxyHandler) {
 		Host:    c.ProxyHost,
 		Port:    c.ProxyPort,
 		Key:     c.Key,
-		log:     log.New(os.Stdout, xlog.Magenta+" [PROXY] "+xlog.Reset, log.Ldate|log.Lmicroseconds),
+		log:     log.New(os.Stdout, string(xlog.Magenta)+" [PROXY] "+string(xlog.Reset), log.Ldate|log.Lmicroseconds),
 	}
 	return &ProxyHandler{c: c}
 }
