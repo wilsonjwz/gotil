@@ -16,10 +16,18 @@ type WarnLogger struct {
 	once   sync.Once
 }
 
-func (i *WarnLogger) logOut(format *string, v ...interface{}) {
+func (i *WarnLogger) logOut(col *ColorType, format *string, v ...interface{}) {
 	i.once.Do(func() {
 		i.init()
 	})
+	if col != nil {
+		if format != nil {
+			i.logger.Output(3, string(*col)+fmt.Sprintf(*format, v...))
+			return
+		}
+		i.logger.Output(3, string(*col)+fmt.Sprintln(v...))
+		return
+	}
 	if format != nil {
 		i.logger.Output(3, fmt.Sprintf(*format, v...))
 		return
@@ -29,8 +37,8 @@ func (i *WarnLogger) logOut(format *string, v ...interface{}) {
 
 func (i *WarnLogger) init() {
 	if gotil.String2Int(strings.Split(runtime.Version(), ".")[1]) >= 14 {
-		i.logger = log.New(os.Stdout, Yellow+" [WARN] >> "+Reset, 64|log.Lshortfile|log.Ldate|log.Lmicroseconds)
+		i.logger = log.New(os.Stdout, "[WARN] >> ", 64|log.Lshortfile|log.Ldate|log.Lmicroseconds)
 		return
 	}
-	i.logger = log.New(os.Stdout, Yellow+" [WARN] "+Reset, log.Lshortfile|log.Ldate|log.Lmicroseconds)
+	i.logger = log.New(os.Stdout, "[WARN] ", log.Lshortfile|log.Ldate|log.Lmicroseconds)
 }

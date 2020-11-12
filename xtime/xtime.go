@@ -1,6 +1,7 @@
 package xtime
 
 import (
+	"context"
 	"database/sql/driver"
 	"strconv"
 	"time"
@@ -59,15 +60,19 @@ func (d *Duration) UnmarshalText(text []byte) error {
 	return err
 }
 
-//// Shrink will decrease the duration by comparing with context's timeout duration
-//// and return new timeout\context\CancelFunc.
-//func (d Duration) Shrink(c context.Context) (Duration, context.Context, context.CancelFunc) {
-//	if deadline, ok := c.Deadline(); ok {
-//		if ctimeout := time.Until(deadline); ctimeout < time.Duration(d) {
-//			// deliver small timeout
-//			return Duration(ctimeout), c, func() {}
-//		}
-//	}
-//	ctx, cancel := context.WithTimeout(c, time.Duration(d))
-//	return d, ctx, cancel
-//}
+// UnitTime duration parse to unit, such as "300ms", "1h30m" or "2h10s".
+func (d *Duration) UnitTime() string {
+	return DurationToUnit(time.Duration(*d))
+}
+
+// Shrink will decrease the duration by comparing with context's timeout duration and return new timeout\context\CancelFunc.
+func (d Duration) Shrink(c context.Context) (Duration, context.Context, context.CancelFunc) {
+	if deadline, ok := c.Deadline(); ok {
+		if ctimeout := time.Until(deadline); ctimeout < time.Duration(d) {
+			// deliver small timeout
+			return Duration(ctimeout), c, func() {}
+		}
+	}
+	ctx, cancel := context.WithTimeout(c, time.Duration(d))
+	return d, ctx, cancel
+}

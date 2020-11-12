@@ -9,87 +9,87 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-type Logger struct {
+type ZapLogger struct {
 	Logger *zap.Logger
 	Sugar  *zap.SugaredLogger
 	c      zap.Config
 	once   sync.Once
 }
 
-var z = &Logger{}
+var z = &ZapLogger{}
 
-func Zap() *Logger {
+func Zap() *ZapLogger {
 	z.once.Do(func() {
 		z.initZap()
 	})
 	return z
 }
 
-func (l *Logger) Info(args ...interface{}) {
+func (l *ZapLogger) Info(args ...interface{}) {
 	if l.Sugar != nil {
 		l.Sugar.Info(args...)
 		return
 	}
-	infoLog.logOut(nil, args...)
+	infoLog.logOut(nil, nil, args...)
 }
 
-func (l *Logger) Infof(format string, args ...interface{}) {
+func (l *ZapLogger) Infof(format string, args ...interface{}) {
 	if l.Sugar != nil {
 		l.Sugar.Infof(format, args...)
 		return
 	}
-	infoLog.logOut(&format, args...)
+	infoLog.logOut(nil, &format, args...)
 }
 
-func (l *Logger) Debug(args ...interface{}) {
+func (l *ZapLogger) Debug(args ...interface{}) {
 	if l.Sugar != nil {
 		l.Sugar.Debug(args...)
 		return
 	}
-	debugLog.logOut(nil, args...)
+	debugLog.logOut(nil, nil, args...)
 }
 
-func (l *Logger) Debugf(format string, args ...interface{}) {
+func (l *ZapLogger) Debugf(format string, args ...interface{}) {
 	if l.Sugar != nil {
 		l.Sugar.Debugf(format, args...)
 		return
 	}
-	debugLog.logOut(&format, args...)
+	debugLog.logOut(nil, &format, args...)
 }
 
-func (l *Logger) Warn(args ...interface{}) {
+func (l *ZapLogger) Warn(args ...interface{}) {
 	if l.Sugar != nil {
 		l.Sugar.Warn(args...)
 		return
 	}
-	warnLog.logOut(nil, args...)
+	warnLog.logOut(nil, nil, args...)
 }
 
-func (l *Logger) Warnf(format string, args ...interface{}) {
+func (l *ZapLogger) Warnf(format string, args ...interface{}) {
 	if l.Sugar != nil {
 		l.Sugar.Warnf(format, args...)
 		return
 	}
-	warnLog.logOut(&format, args...)
+	warnLog.logOut(nil, &format, args...)
 }
 
-func (l *Logger) Error(args ...interface{}) {
+func (l *ZapLogger) Error(args ...interface{}) {
 	if l.Sugar != nil {
 		l.Sugar.Error(args...)
 		return
 	}
-	errLog.logOut(nil, args...)
+	errLog.logOut(nil, nil, args...)
 }
 
-func (l *Logger) Errorf(format string, args ...interface{}) {
+func (l *ZapLogger) Errorf(format string, args ...interface{}) {
 	if l.Sugar != nil {
 		l.Sugar.Errorf(format, args...)
 		return
 	}
-	errLog.logOut(&format, args...)
+	errLog.logOut(nil, &format, args...)
 }
 
-func (l *Logger) initZap() {
+func (l *ZapLogger) initZap() {
 	var err error
 	l.c = zap.NewProductionConfig()
 	l.c.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
