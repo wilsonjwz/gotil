@@ -22,10 +22,10 @@ func (i *WarnLogger) logOut(col *ColorType, format *string, v ...interface{}) {
 	})
 	if col != nil {
 		if format != nil {
-			i.logger.Output(3, string(*col)+fmt.Sprintf(*format, v...))
+			i.logger.Output(3, string(*col)+fmt.Sprintf(*format, v...)+string(Reset))
 			return
 		}
-		i.logger.Output(3, string(*col)+fmt.Sprintln(v...))
+		i.logger.Output(3, string(*col)+fmt.Sprintln(v...)+string(Reset))
 		return
 	}
 	if format != nil {
