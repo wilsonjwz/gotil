@@ -16,29 +16,29 @@ type ErrorLogger struct {
 	once   sync.Once
 }
 
-func (e *ErrorLogger) logOut(format *string, v ...interface{}) {
+func (e *ErrorLogger) logOut(col *ColorType, format *string, v ...interface{}) {
 	e.once.Do(func() {
 		e.init()
 	})
+	if col != nil {
+		if format != nil {
+			e.logger.Output(3, string(*col)+fmt.Sprintf(*format, v...))
+			return
+		}
+		e.logger.Output(3, string(*col)+fmt.Sprintln(v...))
+		return
+	}
 	if format != nil {
 		e.logger.Output(3, fmt.Sprintf(*format, v...))
-		//i.logger.Writer().Write(stack())
 		return
 	}
 	e.logger.Output(3, fmt.Sprintln(v...))
-	//i.logger.Writer().Write(stack())
 }
 
 func (e *ErrorLogger) init() {
 	if gotil.String2Int(strings.Split(runtime.Version(), ".")[1]) >= 14 {
-		e.logger = log.New(os.Stdout, Red+" [ERROR] >> "+Reset, 64|log.Lshortfile|log.Ldate|log.Lmicroseconds)
+		e.logger = log.New(os.Stdout, "[ERROR] >> ", 64|log.Lshortfile|log.Ldate|log.Lmicroseconds)
 		return
 	}
-	e.logger = log.New(os.Stdout, Red+" [ERROR] "+Reset, log.Lshortfile|log.Ldate|log.Lmicroseconds)
+	e.logger = log.New(os.Stdout, "[ERROR] ", log.Lshortfile|log.Ldate|log.Lmicroseconds)
 }
-
-//func stack() (bs []byte) {
-//	var buf [2 << 10]byte
-//	runtime.Stack(buf[:], false)
-//	return buf[:]
-//}

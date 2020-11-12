@@ -28,6 +28,24 @@ func TestLog(t *testing.T) {
 		return nil
 	})
 
+	// color log
+	eg.Go(func(ctx context.Context) error {
+		Color(White).Info("color log info")
+		return nil
+	})
+	eg.Go(func(ctx context.Context) error {
+		Color(Cyan).Debug("color log debug")
+		return nil
+	})
+	eg.Go(func(ctx context.Context) error {
+		Color(Yellow).Warn("color log warn")
+		return nil
+	})
+	eg.Go(func(ctx context.Context) error {
+		Color(Red).Error("color log error")
+		return nil
+	})
+
 	// zap log
 	eg.Go(func(ctx context.Context) error {
 		Zap().Info("zap info")
