@@ -8,9 +8,7 @@ import (
 
 var (
 	secretKey = "GYBh3Rmey7nNzR/NpV0vAw=="
-	iv        = "1234567812345678"
-	//secretKey = "wywmxxkj"
-	//iv        = "12345678"
+	iv        = "JR3unO2glQuMhUx3"
 )
 
 func TestDesCBCEncryptDecrypt(t *testing.T) {
