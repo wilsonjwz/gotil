@@ -3,33 +3,44 @@ package aes
 import (
 	"crypto/cipher"
 	"crypto/des"
-	"encoding/base64"
 )
 
-// 加密后转成Base64字符串
-func DesCBCEncryptToString(originData []byte, secretKey string) (string, error) {
-	bytes, err := encrypt(originData, secretKey)
-	if err != nil {
-		return "", err
-	}
-	return base64.StdEncoding.EncodeToString(bytes), nil
+// 加密后的Bytes数组
+func DesCBCEncryptData(originData, key []byte) ([]byte, error) {
+	return encrypt(originData, key)
 }
 
 // 加密后的Bytes数组
-func DesCBCEncryptToBytes(originData []byte, secretKey string) ([]byte, error) {
-	return encrypt(originData, secretKey)
+func DesCBCEncryptIvData(originData, key, iv []byte) ([]byte, error) {
+	data, err := encryptIv(originData, key, iv)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
 }
 
-func encrypt(originData []byte, secretKey string) ([]byte, error) {
-	key := []byte(secretKey)
+func encrypt(originData, key []byte) ([]byte, error) {
 	block, err := des.NewTripleDESCipher(key)
 	if err != nil {
 		return nil, err
 	}
 	blockSize := block.BlockSize()
-	originData = PKCS7Padding(originData, blockSize)
-
 	blockMode := cipher.NewCBCEncrypter(block, key[:blockSize])
+
+	originData = PKCS7Padding(originData, blockSize)
+	secretData := make([]byte, len(originData))
+	blockMode.CryptBlocks(secretData, originData)
+	return secretData, nil
+}
+
+func encryptIv(originData, key, iv []byte) ([]byte, error) {
+	block, err := des.NewTripleDESCipher(key)
+	if err != nil {
+		return nil, err
+	}
+	blockMode := cipher.NewCBCEncrypter(block, iv[:block.BlockSize()])
+
+	originData = PKCS7Padding(originData, block.BlockSize())
 	secretData := make([]byte, len(originData))
 	blockMode.CryptBlocks(secretData, originData)
 	return secretData, nil
