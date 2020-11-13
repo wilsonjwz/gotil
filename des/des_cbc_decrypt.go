@@ -1,8 +1,8 @@
 package aes
 
 import (
-	"crypto/aes"
 	"crypto/cipher"
+	"crypto/des"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -10,12 +10,12 @@ import (
 )
 
 // 解密数据的Bytes数组
-func AesDecryptToBytes(base64Data, secretKey string) ([]byte, error) {
+func DesDecryptToBytes(base64Data, secretKey string) ([]byte, error) {
 	return decrypt(base64Data, secretKey)
 }
 
 // 解密数据到结构体
-func AesDecryptToStruct(base64Data, secretKey string, beanPtr interface{}) (err error) {
+func DesDecryptToStruct(base64Data, secretKey string, beanPtr interface{}) (err error) {
 	//验证参数类型
 	beanValue := reflect.ValueOf(beanPtr)
 	if beanValue.Kind() != reflect.Ptr {
@@ -38,7 +38,7 @@ func AesDecryptToStruct(base64Data, secretKey string, beanPtr interface{}) (err 
 }
 
 // 解密数据到Map集合
-func AesDecryptToMap(base64Data, secretKey string) (mapData map[string]interface{}, err error) {
+func DesDecryptToMap(base64Data, secretKey string) (mapData map[string]interface{}, err error) {
 	originByte, err := decrypt(base64Data, secretKey)
 	if err != nil {
 		return nil, err
@@ -58,7 +58,7 @@ func decrypt(data, secretKey string) (originByte []byte, err error) {
 		return nil, err
 	}
 	key := []byte(secretKey)
-	block, err := aes.NewCipher(key)
+	block, err := des.NewTripleDESCipher(key)
 	if err != nil {
 		return nil, err
 	}
@@ -66,5 +66,5 @@ func decrypt(data, secretKey string) (originByte []byte, err error) {
 	blockMode := cipher.NewCBCDecrypter(block, key[:blockSize])
 	originByte = make([]byte, len(secretData))
 	blockMode.CryptBlocks(originByte, secretData)
-	return PKCS5UnPadding(originByte), nil
+	return PKCS7UnPadding(originByte), nil
 }
