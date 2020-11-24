@@ -13,7 +13,7 @@ type GinEngine struct {
 	addr string
 }
 
-func InitServer(c *Config) *GinEngine {
+func InitGin(c *Config) *GinEngine {
 	g := gin.Default()
 
 	if c.Limit != nil && c.Limit.Rate != 0 {

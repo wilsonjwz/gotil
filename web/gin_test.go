@@ -18,7 +18,7 @@ func TestInitServer(t *testing.T) {
 	//	},
 	//}
 	//
-	//g := InitServer(c)
+	//g := InitGin(c)
 	//g.Gin.Use(g.CORS())
 	//g.Gin.Use(g.Recovery())
 	//
