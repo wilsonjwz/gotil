@@ -2,7 +2,6 @@ package orm
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -13,9 +12,9 @@ func InitGorm(c *MySQLConfig) (db *gorm.DB) {
 	if err != nil {
 		panic(fmt.Sprintf("failed to connect database error:%+v", err))
 	}
-	db.DB().SetMaxIdleConns(c.Idle)
+	db.DB().SetMaxOpenConns(c.MaxOpenConn)
+	db.DB().SetMaxIdleConns(c.MaxIdleConn)
+	db.DB().SetConnMaxLifetime(c.MaxConnTimeout)
 	db.LogMode(c.ShowSQL)
-	db.DB().SetMaxOpenConns(c.Active)
-	db.DB().SetConnMaxLifetime(time.Duration(c.IdleTimeout))
 	return db
 }

@@ -201,9 +201,10 @@ func (c *Client) SendStruct(v interface{}) (client *Client) {
 	return c
 }
 
-func (c *Client) SendString(v string) (client *Client) {
+// encodeStr: url.Values.Encode()
+func (c *Client) SendString(encodeStr string) (client *Client) {
 	c.mu.Lock()
-	c.FormString = v
+	c.FormString = encodeStr
 	c.mu.Unlock()
 	return c
 }
