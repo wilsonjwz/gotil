@@ -28,8 +28,8 @@ func (g *GinEngine) CORS() gin.HandlerFunc {
 			c.Header("Access-Control-Allow-Headers", "Authorization, Content-Length, X-CSRF-Token, Content-Type, Token, Session")
 			// 允许的方法
 			c.Header("Access-Control-Allow-Methods", "POST, PUT ,GET, OPTIONS, DELETE, HEAD, TRACE, UPDATE")
-			// 运行客户端解析的Header
-			c.Header("Access-Control-Expose-Headers", "Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type")
+			// 允许客户端解析的Header
+			c.Header("Access-Control-Expose-Headers", "Authorization, Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type")
 			// 缓存时间
 			c.Header("Access-Control-Max-Age", "172800")
 			// 允许客户端传递校验信息，cookie
