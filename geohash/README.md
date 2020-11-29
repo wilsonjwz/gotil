@@ -54,4 +54,4 @@ geohash基本原理是将地球理解为一个二维平面，将平面递归分�
 
 ### geohash长度和精度对照表
 
-<img src="https://raw.githubusercontent.com/iGoogle-ink/geohash/master/table.jpg"/>
+<img src="https://raw.githubusercontent.com/iGoogle-ink/gotil/main/geohash/table.jpg"/>

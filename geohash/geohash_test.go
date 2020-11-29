@@ -1,12 +1,13 @@
 package geohash
 
 import (
-	"fmt"
 	"testing"
+
+	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func TestEncode(t *testing.T) {
 
 	geohash := Encode(31.2851847116, 121.5571761131, 10)
-	fmt.Println(geohash) // wtw3yp71rm
+	xlog.Debug(geohash) // wtw3yp71rm
 }
