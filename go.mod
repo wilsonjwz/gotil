@@ -6,9 +6,14 @@ require (
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-redis/redis/v8 v8.3.3
 	github.com/go-sql-driver/mysql v1.5.0
+	github.com/golang/protobuf v1.4.3
 	github.com/gorilla/websocket v1.4.2
 	github.com/jinzhu/gorm v1.9.16
 	github.com/labstack/echo/v4 v4.1.17
+	github.com/micro/go-micro/v2 v2.9.1
+	github.com/micro/go-plugins/broker/mqtt/v2 v2.9.1
+	github.com/micro/go-plugins/broker/nsq/v2 v2.9.1
+	github.com/micro/go-plugins/broker/redis/v2 v2.9.1
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/viper v1.7.1
 	go.uber.org/zap v1.16.0
