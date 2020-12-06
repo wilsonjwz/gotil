@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+
 	"github.com/iGoogle-ink/gotil/orm"
 	"github.com/iGoogle-ink/gotil/xlog"
 	"github.com/iGoogle-ink/gotil/xtime"
@@ -15,11 +17,11 @@ type MxCity struct {
 func main() {
 
 	c := &orm.MySQLConfig{
-		DSN:         "uname:password@tcp(host:3306)/db_name?timeout=10s&readTimeout=10s&writeTimeout=10s&parseTime=true&loc=Local&charset=utf8mb4",
-		Active:      10,
-		Idle:        10,
-		IdleTimeout: 10,
-		ShowSQL:     true,
+		DSN:            "uname:password@tcp(host:3306)/db_name?timeout=10s&readTimeout=10s&writeTimeout=10s&parseTime=true&loc=Local&charset=utf8mb4",
+		MaxOpenConn:    10,
+		MaxIdleConn:    10,
+		MaxConnTimeout: xtime.Duration(10 * time.Second),
+		ShowSQL:        true,
 	}
 	db := orm.InitGorm(c)
 

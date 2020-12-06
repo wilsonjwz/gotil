@@ -2,8 +2,10 @@ package orm
 
 import (
 	"testing"
+	"time"
 
 	"github.com/iGoogle-ink/gotil/xlog"
+	"github.com/iGoogle-ink/gotil/xtime"
 )
 
 var (
@@ -21,7 +23,7 @@ func (m *Student) TableName() string {
 
 func TestInitGorm(t *testing.T) {
 	// 初始化 Gorm
-	gc1 := &MySQLConfig{DSN: dsn, MaxOpenConn: 10, MaxIdleConn: 10, MaxConnTimeout: 10, ShowSQL: true}
+	gc1 := &MySQLConfig{DSN: dsn, MaxOpenConn: 10, MaxIdleConn: 10, MaxConnTimeout: xtime.Duration(10 * time.Second), ShowSQL: true}
 	g := InitGorm(gc1)
 
 	student := &Student{Name: "Jerry"}
@@ -45,7 +47,7 @@ func TestInitGorm(t *testing.T) {
 
 func TestInitXorm(t *testing.T) {
 	// 初始化 Xorm
-	gc1 := &MySQLConfig{DSN: dsn, MaxOpenConn: 10, MaxIdleConn: 10, MaxConnTimeout: 10, ShowSQL: true}
+	gc1 := &MySQLConfig{DSN: dsn, MaxOpenConn: 10, MaxIdleConn: 10, MaxConnTimeout: xtime.Duration(10 * time.Second), ShowSQL: true}
 	x := InitXorm(gc1)
 
 	student := new(Student)

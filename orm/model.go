@@ -2,8 +2,8 @@ package orm
 
 import (
 	"database/sql"
-	"time"
 
+	"github.com/iGoogle-ink/gotil/xtime"
 	"github.com/jinzhu/gorm"
 )
 
@@ -18,9 +18,9 @@ var (
 
 // MySQLConfig mysql config.
 type MySQLConfig struct {
-	DSN            string        // data source name.
-	MaxOpenConn    int           // pool
-	MaxIdleConn    int           // pool
-	MaxConnTimeout time.Duration // connect max life time. second
+	DSN            string         // data source name.
+	MaxOpenConn    int            // pool
+	MaxIdleConn    int            // pool
+	MaxConnTimeout xtime.Duration // connect max life time. exp:10s、2m、1m10s
 	ShowSQL        bool
 }
